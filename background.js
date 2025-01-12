@@ -1,11 +1,12 @@
-let stored_problem_data = null;
+var stored_problem_data = null;
+var testing = "luffy"
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "problem_data") {
         console.log("Recieved from content.js:", message.data);
         const {title} = message.data;
         
-        console.log(title);
+        console.log("data recieved from content.js:",title);
 
         stored_problem_data = title;
     }
@@ -13,7 +14,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 chrome.runtime.onConnect.addListener((port) => {
     if(port.name === "popup.js"){
-        console.log("Popup Connected to Background. Sending stored problem data!");
+        console.log("Popup Connected to Background. Sending stored problem data!:",stored_problem_data);
 
         if(stored_problem_data){
             port.postMessage({

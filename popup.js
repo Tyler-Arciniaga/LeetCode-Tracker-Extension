@@ -1,3 +1,5 @@
+var title = null
+
 const port = chrome.runtime.connect({name: "popup.js"});
 
 console.log("Attempting to connect with background.js...")
@@ -5,7 +7,9 @@ console.log("Attempting to connect with background.js...")
 port.onMessage.addListener((message) =>{
     console.log("Recieved from background.js:",message);
     if (message.action === "problem_data"){
-        const {title} = message.data;
+        title = message.data.title;
+        const title_input = document.getElementsByName("official_title")[0];
+        title_input.value = title;
     }
 })
 
