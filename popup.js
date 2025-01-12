@@ -1,4 +1,20 @@
-chrome.runtime.onConnect.addListener((port) => {
+const port = chrome.runtime.connect({name: "popup.js"});
+
+console.log("Attempting to connect with background.js...")
+
+port.onMessage.addListener((message) =>{
+    console.log("Recieved from background.js:",message);
+    if (message.action === "problem_data"){
+        const {title} = message.data;
+    }
+})
+
+
+
+
+
+/*
+chrome.runtime.co.addListener((port) => {
     if (port.name === "popup.js Connect"){
         port.onMessage.addListener((message) => {
             if (message.action === "problem_data"){
@@ -28,4 +44,4 @@ chrome.runtime.onConnect.addListener((port) => {
 
 //console.log(problem_title_elements[0]);
 //problem_title_elements[0].value = "lolol";
-
+*/

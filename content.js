@@ -30,7 +30,6 @@ function sendLCData() {
 
 
 readLCData();
-console.log("LOVEYDOVEY");
 sendLCData();
 
 

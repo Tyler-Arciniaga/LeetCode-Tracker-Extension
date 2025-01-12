@@ -1,13 +1,75 @@
+let stored_problem_data = null;
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "problem_data") {
-        console.log("Recieved problem data from content.js:", message.data);
+        console.log("Recieved from content.js:", message.data);
+        const {title} = message.data;
         
-        // Relay the message to the popup (if open)
+        console.log(title);
+
+        stored_problem_data = title;
+    }
+});
+
+chrome.runtime.onConnect.addListener((port) => {
+    if(port.name === "popup.js"){
+        console.log("Popup Connected to Background. Sending stored problem data!");
+
+        if(stored_problem_data){
+            port.postMessage({
+                action: "problem_data",
+                data: {title: stored_problem_data}
+            });
+        }
+    }
+
+});
+
+
+
+
+
+
+
+/*
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "problem_data") {
+        console.log("Recieved from content.js:", message.data);
+        const {title} = message.data;
+        console.log(title)
+
+        chrome.storage.local.set({title: title},function(){
+            console.log("Temporary Data Saved:", title);
+        });
+
+        const port = chrome.runtime.connect({name: "background"});
+        
+        if(port) {
+            chrome.storage.local.get("title",function(result) {
+                if (chrome.runtime.lastError){
+                    console.log("Error retrieving local storage:",chrome.runtime.lastError);
+                } else{
+                    console.log("Stored value retrieved!:",result.title);
+                }
+            });
+            port.postMessage({
+                action: "problem_data",
+                data: {result}
+            })
+        } else{
+            console.log("No Connection has been made :(");
+        }
+    }
+});
+
+       
+/* 
+// Relay the message to the popup (if open)
         const port = chrome.runtime.connect({name: "popup.js Connect"})
 
         port.postMessage({
             action: "problem_data",
             data: message.data,
         });
-    }
-});
+        
+*/
