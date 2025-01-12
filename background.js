@@ -9,7 +9,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.log("data recieved from content.js:",title);
 
         stored_problem_data = title;
+
+        setTimeout(() => {
+            sendResponse({status: "success", message: "Data Recieved from content.js to background.js"});
+        },1000)
     }
+    return true;
 });
 
 chrome.runtime.onConnect.addListener((port) => {
@@ -17,6 +22,7 @@ chrome.runtime.onConnect.addListener((port) => {
         console.log("Popup Connected to Background. Sending stored problem data!:",stored_problem_data);
 
         if(stored_problem_data){
+            console.log("Sending data from background to popup now!")
             port.postMessage({
                 action: "problem_data",
                 data: {title: stored_problem_data}
