@@ -1,14 +1,17 @@
-var stored_problem_data = null;
-var testing = "luffy"
+var problem_title_stored = null;
+var problem_difficulty_stored = null;
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "problem_data") {
         console.log("Recieved from content.js:", message.data);
-        const {title} = message.data;
+        const {title,difficulty} = message.data;
         
-        console.log("data recieved from content.js:",title);
+        console.log("data recieved from content.js:",title,"/",difficulty);
 
-        stored_problem_data = title;
+        problem_title_stored = title;
+        problem_difficulty_stored = difficulty;
+
+        
 
         try{
             setTimeout(() => {
@@ -30,64 +33,27 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 chrome.runtime.onConnect.addListener((port) => {
     if(port.name === "popup.js"){
-        console.log("Popup Connected to Background. Sending stored problem data!:",stored_problem_data);
+        console.log("Popup Connected to Background. Sending stored problem data!:",problem_title_stored,"/",problem_difficulty_stored);
 
-        if(stored_problem_data){
+        if(problem_title_stored){
             console.log("Sending data from background to popup now!")
             port.postMessage({
                 action: "problem_data",
-                data: {title: stored_problem_data}
+                data: {title: problem_title_stored, difficulty: problem_difficulty_stored}
             });
         }
     }
 
 });
 
+// everything below is for Google Sheets API CALL
 
-
-
-
-
-
-/*
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "problem_data") {
-        console.log("Recieved from content.js:", message.data);
-        const {title} = message.data;
-        console.log(title)
-
-        chrome.storage.local.set({title: title},function(){
-            console.log("Temporary Data Saved:", title);
-        });
-
-        const port = chrome.runtime.connect({name: "background"});
-        
-        if(port) {
-            chrome.storage.local.get("title",function(result) {
-                if (chrome.runtime.lastError){
-                    console.log("Error retrieving local storage:",chrome.runtime.lastError);
-                } else{
-                    console.log("Stored value retrieved!:",result.title);
-                }
-            });
-            port.postMessage({
-                action: "problem_data",
-                data: {result}
-            })
-        } else{
-            console.log("No Connection has been made :(");
-        }
+    if (message.action === "logData"){
+        console.log("logged data from popup.js recieved")
+        sendResponse({status: "success", message: "Data recieved :)"});
     }
+
+    return true; //needed in order to keep message channel open for the async response
+
 });
-
-       
-/* 
-// Relay the message to the popup (if open)
-        const port = chrome.runtime.connect({name: "popup.js Connect"})
-
-        port.postMessage({
-            action: "problem_data",
-            data: message.data,
-        });
-        
-*/

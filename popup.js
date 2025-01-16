@@ -1,4 +1,5 @@
-var title = null
+var title = null;
+var difficulty = null;
 
 const port = chrome.runtime.connect({name: "popup.js"});
 
@@ -8,44 +9,47 @@ port.onMessage.addListener((message) =>{
     console.log("Recieved from background.js:",message);
     if (message.action === "problem_data"){
         title = message.data.title;
+        difficulty = message.data.difficulty;
+        
         const title_input = document.getElementsByName("official_title")[0];
         title_input.value = title;
+
+        const difficulty_input = document.getElementsByName("official_difficulty")[0];
+        difficulty_input.value = difficulty;
     }
 })
 
 
+// everything below here is backend for Google Sheets API interaction
+document.getElementById("leetcode-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const questionTitle = document.getElementById("question-title").value;
+    const questionDifficulty = document.getElementById("question-difficulty").value;
+    const concept = document.getElementById("concepts").value;
+    const personalDifficulty = document.getElementById("personal-difficulty").value;
+    const personalNotes = document.getElementById("personal-notes").value;
 
 
+    console.log(questionTitle,questionDifficulty,concept,personalDifficulty,personalNotes);
 
-/*
-chrome.runtime.co.addListener((port) => {
-    if (port.name === "popup.js Connect"){
-        port.onMessage.addListener((message) => {
-            if (message.action === "problem_data"){
-                console.log("Recieved problem data from background.js:", message.data);
-                const {title} = message.data;
+    const data = {
+        official_title: questionTitle,
+        official_difficulty: questionDifficulty,
+        concept: concept,
+        personal_difficulty: personalDifficulty,
+        personal_notes: personalNotes
+    };
 
-                const title_input = document.getElementsByName("official_title")[0];
-                if (title_input){
-                    title_input.value = title;
-                    }
-            }
-        });
-    }
+    chrome.runtime.sendMessage({action: "logData", data: data}, function(response) {
+        console.log(response.message);
+
+        if (response.status === "success"){
+            console.log("Data logged successfully into background.js");
+        } else{
+            console.log("Error logging data to background.js")
+        }
+
+    });
 
 });
-
-
-
-
-//    
-//if (message.action === "problem_data"){
-//    console.log("Recieved Problem Data:", message.data);
-    
-    
-//}
-//
-
-//console.log(problem_title_elements[0]);
-//problem_title_elements[0].value = "lolol";
-*/

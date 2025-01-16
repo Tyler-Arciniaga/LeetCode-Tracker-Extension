@@ -8,33 +8,42 @@
 <body>
     <h1>LeetCode Tracker</h1>
 
-    <label for = "official_title">Problem Title</label>
-    <input name = "official_title" type = "text" value = ""/>
-    <br>
-    
-    <label for = "official_difficulty">Problem Difficulty</label>
-    <input name = "official_difficulty" type = "text"/>
-    
-    
-    <br>
-    <label for="personal_difficulty">Personal Difficulty</label>
-    
-    <select name = "personal_difficulty" id = "personal_difficulty">
-        <option value = "" selected disabled hidden>--</option>
-        <option value = "Easy">Easy</option>
-        <option value = "Medium">Medium</option>
-        <option value = "Hard">Hard</option>
-    </select>
 
-    
-    <br>
+    <form id = "leetcode-form">
 
-    <label for = "personal_notes">Personal Notes</label>
-    <input name = "personal_notes" type = "text"/>
+        <label for = "official_title">Problem Title</label>
+        <input id = "question-title" name = "official_title" type = "text" value = ""/>
+        <br>
+        
+        <label for = "official_difficulty">Problem Difficulty</label>
+        <input id = "question-difficulty" name = "official_difficulty" type = "text"/>
+        <br>
 
-    <br>
+        <label for = "concepts">Problem Concept</label>
+        <input id = "concepts" name = "concepts" type = "text"/>
+        
+        
+        <br>
+        <label for="personal_difficulty">Personal Difficulty</label>
+        
+        <select id = "personal-difficulty" name = "personal_difficulty" id = "personal_difficulty">
+            <option value = "" selected disabled hidden>--</option>
+            <option value = "Easy">Easy</option>
+            <option value = "Medium">Medium</option>
+            <option value = "Hard">Hard</option>
+        </select>
 
-    <input name = "problem_submission" type = "submit"
+        
+        <br>
+
+        <label for = "personal_notes">Personal Notes</label>
+        <textarea id = "personal-notes" name = "personal_notes"></textarea>
+
+        <br>
+
+       <button type ="submit">Submit</button>
+
+    </form>
 
 
 
