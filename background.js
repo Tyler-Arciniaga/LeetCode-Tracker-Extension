@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 var problem_title_stored = null;
 var problem_difficulty_stored = null;
 
@@ -50,10 +52,39 @@ chrome.runtime.onConnect.addListener((port) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "logData"){
+        data = message.data;
         console.log("logged data from popup.js recieved")
-        sendResponse({status: "success", message: "Data recieved :)"});
+
+        logToGoogleSheets(data)
+            .then(() => {
+                sendResponse({status: "success",message: "Data logged to Google Sheets :)"});
+            })
+            .catch((error) => {
+                console.error(error);
+                sendResponse({status: "error",message: "Failed to log data :("});
+            });
     }
 
     return true; //needed in order to keep message channel open for the async response
 
 });
+
+
+//load Google API and authenticate users
+function initializeGoogleAPI() {
+    gapi.load('client:auth2', () => {
+        gapi.auth2.init({
+            client_id: process.env.CLIENT_ID
+        }).then(() => {
+            console.log("Google API client initialized");
+        }).catch(error => {
+            console.error("Error initalizing Google API client:", error);
+        });
+    });
+}
+
+//authenticate users and get personal access token
+function authenticateUser() {
+    const authInstance = gapi.auth2.getAuthInstance
+}
+
