@@ -10,9 +10,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
         stored_problem_data = title;
 
-        setTimeout(() => {
-            sendResponse({status: "success", message: "Data Recieved from content.js to background.js"});
-        },1000)
+        try{
+            setTimeout(() => {
+                sendResponse({status: "success", message: "Data Recieved from content.js to background.js"});
+            },1000);
+        } catch(error){
+            console.error("Error sending response from background:",error);
+            sendResponse({
+                status: "error",
+                message: "Error sending data back"
+            });
+
+        }
+
+        
     }
     return true;
 });

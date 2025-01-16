@@ -1,5 +1,5 @@
 console.log("Content Script is Running!");
-var problem_title = null;
+let problem_title = null;
 
 function sendLCData() {
 
@@ -32,7 +32,7 @@ function readLCData() {
         console.log(problem_difficulty_elements[0].textContent);
         
         sendLCData();
-    }, 1000); // Delay by 1 second (adjust timing based on page load speed)
+    }, 2000); // Delay by 1 second (adjust timing based on page load speed)
 }
 
 function handleError(error){
@@ -43,6 +43,7 @@ function handleError(error){
 const observer = new MutationObserver(() => {
     readLCData();
 })
+
 
 readLCData();
 
