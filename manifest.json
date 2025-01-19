@@ -11,7 +11,8 @@
   },
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "identity"
   ],
   "content_scripts": [
     {
@@ -19,5 +20,18 @@
       "js": ["content.js"],
       "run_at": "document_end"
     }
-  ]
+  ],
+  "content_security_policy": {
+    "script-src": "'self' https://apis.google.com;",  
+    "object-src": "'self'"
+  },
+  "host_permissions": [
+    "https://www.googleapis.com/*"  
+  ],
+  "oauth2": {
+    "client_id": "537951284717-vqndplk40e9sk68pvlv627c74esa2123.apps.googleusercontent.com",  
+    "scopes": [
+      "https://www.googleapis.com/auth/spreadsheets"
+    ]
+  }
 }
