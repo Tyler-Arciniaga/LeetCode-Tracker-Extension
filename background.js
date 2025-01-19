@@ -47,6 +47,30 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 // everything below is for Google Sheets API CALL
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.action === "logData"){
+        const data = request.data; //data from user form submission
+        console.log("Logging data to google sheets:",data);
+
+        logDataToGoogleSheets(data);
+        sendResponse({status: "success", message: "Data logged to Google Sheets 〠"})
+        
+        return true; //keeps port open for resposne to be sent asynch
+    }
+});
+
+function logDataToGoogleSheets(data){
+    console.log("logDataToGoogleSheets!!!!!!")
+    
+}
+
+
+
+
+
+
+
+
 /*
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "logData"){
