@@ -42,46 +42,49 @@ document.getElementById("leetcode-form").addEventListener("submit", function(eve
     };
 
 
-    loadAPIScript(() => {
-        initAPIClient(() => {
-            chrome.runtime.sendMessage({action: "logData", data: data}, function(response) {
-                console.log(response.message);
+
+    // Call OAuth to authenticate user and send data to Google Sheets
+    chrome.identity.getAuthToken({ interactive: true }, function(token) {
+        if (chrome.runtime.lastError) {
+            console.error("Error getting token: ", chrome.runtime.lastError);
+            return;
+        }
+
+        // Initialize the Google Sheets API client with the token
+        gapi.load('client', () => {
+            gapi.client.init({
+                apiKey: "", // Your API key (if you are using one)
+                access_token: token, // Use the OAuth2 token
+                discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"]
+            }).then(() => {
+                logDataToGoogleSheets(data);
+            }).catch(err => {
+                console.error("Error initializing Google Sheets API client: ", err);
             });
-            
         });
     });
 });
 
-//dynammically loads the Google API script
-function loadAPIScript(callback){
-    const script = document.createElement("script"); //this is working with background.js's virtual DOM
-    script.src = "https://apis.google.com/js/api.js";
-    script.onload = callback;
-    script.onerror = () => {
-        console.error("Failed to load Google API library.");
+// Function to log data into Google Sheets
+function logDataToGoogleSheets(data) {
+    const sheetId = "your-google-sheet-id"; // Replace with your actual Google Sheets ID
+    const range = "Sheet1!A1"; // Replace with your desired range
+
+    const resource = {
+        values: [
+            [data.official_title, data.official_difficulty, data.concept, data.personal_difficulty, data.personal_notes]
+        ]
     };
-    document.head.appendChild(script);
-}
 
-function initAPIClient(callback){
-    const CLIENT_ID = "537951284717-vqndplk40e9sk68pvlv627c74esa2123.apps.googleusercontent.com";
-    const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
-
-    gapi.load('client:auth2', () => {
-        gapi.client.init({
-            clientID: CLIENT_ID,
-        }).then(() => {
-            console.log("Google Sheets API client initialized!");
-            gapi.client.init({
-                apiKey: "",
-                discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
-            }).then(() => {
-                console.log("API client loaded");
-                callback();
-            }).catch(error => {
-                console.error("Error initializing Google API client:", error);
-            });
-        });
+    gapi.client.sheets.spreadsheets.values.append({
+        spreadsheetId: sheetId,
+        range: range,
+        valueInputOption: "RAW",
+        resource: resource
+    }).then(response => {
+        console.log("Data logged to Google Sheets:", response);
+    }).catch(error => {
+        console.error("Error logging data to Google Sheets:", error);
     });
 }
 
