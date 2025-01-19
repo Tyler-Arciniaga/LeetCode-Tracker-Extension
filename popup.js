@@ -3,11 +3,11 @@ var difficulty = null;
 
 const port = chrome.runtime.connect({name: "popup.js"});
 
-console.log("Attempting to connect with background.js...")
+console.log("Attempting to connect with background.js...");
 
-port.onMessage.addListener((message) =>{
-    console.log("Recieved from background.js:",message);
-    if (message.action === "problem_data"){
+port.onMessage.addListener((message) => {
+    console.log("Received from background.js:", message);
+    if (message.action === "problem_data") {
         title = message.data.title;
         difficulty = message.data.difficulty;
         
@@ -17,11 +17,37 @@ port.onMessage.addListener((message) =>{
         const difficulty_input = document.getElementsByName("official_difficulty")[0];
         difficulty_input.value = difficulty;
     }
-})
+});
 
+// Function to get OAuth token using chrome.identity
+function getAuthToken(callback) {
+    chrome.identity.getAuthToken({ interactive: true }, function(token) {
+        if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+            return;
+        }
+        callback(token);
+    });
+}
 
-// everything below here is backend for Google Sheets API interaction
-document.getElementById("leetcode-form").addEventListener("submit", function(event) {
+// Send data to background.js to log it to Google Sheets
+function sendDataToBackground(token, data, callback) {
+    chrome.runtime.sendMessage({ 
+        action: "logData", 
+        token: token, 
+        data: data 
+    }, (response) => {
+        if (response.success) {
+            console.log("Data logged successfully:", response);
+        } else {
+            console.error("Error logging data:", response);
+        }
+        if (callback) callback(response);
+    });
+}
+
+// Event listener for form submission
+document.getElementById("leetcode-form").addEventListener("submit", function (event) {
     event.preventDefault();
 
     const questionTitle = document.getElementById("question-title").value;
@@ -30,8 +56,7 @@ document.getElementById("leetcode-form").addEventListener("submit", function(eve
     const personalDifficulty = document.getElementById("personal-difficulty").value;
     const personalNotes = document.getElementById("personal-notes").value;
 
-
-    console.log(questionTitle,questionDifficulty,concept,personalDifficulty,personalNotes);
+    console.log(questionTitle, questionDifficulty, concept, personalDifficulty, personalNotes);
 
     const data = {
         official_title: questionTitle,
@@ -40,26 +65,15 @@ document.getElementById("leetcode-form").addEventListener("submit", function(eve
         personal_difficulty: personalDifficulty,
         personal_notes: personalNotes
     };
-    
-    chrome.runtime.sendMessage({action: "logData", data: data}, function(response) {
-        console.log(response.message);
 
-        if (response.status){
-            console.log("Data logged successfully:", response.message);
-        } else{
-            console.log("Error logging data:",response.message);
+    // Get auth token and send data
+    getAuthToken((token) => {
+        if (token) {
+            sendDataToBackground(token, data, (response) => {
+                console.log(response);  // Handle response after data is logged
+            });
+        } else {
+            console.error("Failed to get auth token");
         }
-
     });
-})
-
-    
-
-
-
-/*
-
-*/
-
-    
-
+});
