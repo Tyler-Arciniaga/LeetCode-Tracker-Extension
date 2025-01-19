@@ -64,20 +64,23 @@ function loadAPIScript(callback){
 }
 
 function initAPIClient(callback){
-    const API_KEY = "";
-    const CLIENT_ID = "";
+    const CLIENT_ID = "537951284717-vqndplk40e9sk68pvlv627c74esa2123.apps.googleusercontent.com";
     const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
     gapi.load('client:auth2', () => {
         gapi.client.init({
-            apiKEY: API_KEY,
             clientID: CLIENT_ID,
-            scope: SCOPES
         }).then(() => {
             console.log("Google Sheets API client initialized!");
-            callback(); //log data after initalized
-        }).catch(error => {
-            console.error("Error initializing Google API client:", error);
+            gapi.client.init({
+                apiKey: "",
+                discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
+            }).then(() => {
+                console.log("API client loaded");
+                callback();
+            }).catch(error => {
+                console.error("Error initializing Google API client:", error);
+            });
         });
     });
 }
