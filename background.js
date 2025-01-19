@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 var problem_title_stored = null;
 var problem_difficulty_stored = null;
 
@@ -49,7 +47,7 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 // everything below is for Google Sheets API CALL
-
+/*
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "logData"){
         data = message.data;
@@ -87,4 +85,4 @@ function initializeGoogleAPI() {
 function authenticateUser() {
     const authInstance = gapi.auth2.getAuthInstance
 }
-
+*/

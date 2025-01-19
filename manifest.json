@@ -1,23 +1,23 @@
 {
-    "name": "LeetCode Tracker",
-    "description": "Allows to easily log leetcode questions from website on to remote google sheets for easy visualization",
-    "version": "1.0",
-    "manifest_version": 3,
-    "action": {
-      "default_popup": "popup.html"
-    },
-    "background": {
-      "service_worker": "background.js"
-    },
-    "permissions": [
-      "activeTab",
-      "storage"
-    ],
-    "content_scripts": [
-      {
-        "matches": ["https://leetcode.com/problems/*"],
-        "js": ["content.js"],
-        "run_at": "document_end"
-      }
-    ]
-  }
+  "name": "LeetCode Tracker",
+  "description": "Allows to easily log leetcode questions from website on to remote google sheets for easy visualization",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/problems/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
