@@ -67,8 +67,8 @@ document.getElementById("leetcode-form").addEventListener("submit", function(eve
 
 // Function to log data into Google Sheets
 function logDataToGoogleSheets(data) {
-    const sheetId = "your-google-sheet-id"; // Replace with your actual Google Sheets ID
-    const range = "Sheet1!A1"; // Replace with your desired range
+    const sheetId = "1PemLQl7vTGnCdMHTjLlrJJ3XwgHI3iSRhRqKtCGP1Ak"; 
+    const range = "Sheet1!A1"; 
 
     const resource = {
         values: [
