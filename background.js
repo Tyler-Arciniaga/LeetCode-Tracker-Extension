@@ -51,22 +51,69 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.action === "logData"){
         const data = request.data; //data from user form submission
         console.log("Logging data to google sheets:",data);
-
-        logDataToGoogleSheets(data);
-        sendResponse({status: "success", message: "Data logged to Google Sheets 〠"})
         
+        // Call OAuth to authenticate user and send data to Google Sheets
+        chrome.identity.getAuthToken({ interactive: true }, function(token) {
+            if (chrome.runtime.lastError) {
+                console.error("Error getting token: ", chrome.runtime.lastError);
+                return;
+            }
+
+            loadSheetsAPI(token,data,sendResponse);
+        });
+
+        
+
         return true; //keeps port open for resposne to be sent asynch
     }
 });
 
-function logDataToGoogleSheets(data){
-    console.log("logDataToGoogleSheets!!!!!!")
-    
+function loadSheetsAPI(token,data,sendResponse) {
+    // Initialize the Google Sheets API client with the token
+    gapi.load('client', () => {
+        gapi.client.init({
+            apiKey: "", // Your API key (if you are using one)
+            access_token: token, // Use the OAuth2 token
+            discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"]
+        }).then(() => {
+            logDataToGoogleSheets(data, sendResponse);
+        }).catch(err => {
+            console.error("Error initializing Google Sheets API client: ", err);
+            sendResponse({success: false, error: "Failed to initialize Google Sheets API."})
+        });
+    });
+
+}
+
+
+// Function to log data into Google Sheets
+function logDataToGoogleSheets(data,sendResponse) {
+    const sheetId = "1PemLQl7vTGnCdMHTjLlrJJ3XwgHI3iSRhRqKtCGP1Ak"; 
+    const range = "Sheet1!A1"; 
+
+    const resource = {
+        values: [
+            [data.official_title, data.official_difficulty, data.concept, data.personal_difficulty, data.personal_notes]
+        ]
+    };
+
+    gapi.client.sheets.spreadsheets.values.append({
+        spreadsheetId: sheetId,
+        range: range,
+        valueInputOption: "RAW",
+        resource: resource
+    }).then(response => {
+        console.log("Data logged to Google Sheets:", response);
+        sendResponse({sucess: true, message: "Data logged to Google Sheets 〠"})
+    }).catch(error => {
+        console.error("Error logging data to Google Sheets:", error);
+        sendResponse({success: false, error: "Failed to log to Google Sheets :(."})
+    });
 }
 
 
 
-
+//sendResponse({status: "success", message: "Data logged to Google Sheets 〠"})
 
 
 
