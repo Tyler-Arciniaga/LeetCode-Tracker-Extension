@@ -8,14 +8,20 @@ console.log("Attempting to connect with background.js...");
 port.onMessage.addListener((message) => {
     console.log("Received from background.js:", message);
     if (message.action === "problem_data") {
-        title = message.data.title;
-        difficulty = message.data.difficulty;
-        
-        const title_input = document.getElementsByName("official_title")[0];
-        title_input.value = title;
+        if (!title && !difficulty){
+            var title = message.data.title;
+            var difficulty = message.data.difficulty;
+            
+            const title_input = document.getElementsByName("official_title")[0];
+            title_input.value = title;
 
-        const difficulty_input = document.getElementsByName("official_difficulty")[0];
-        difficulty_input.value = difficulty;
+            const difficulty_input = document.getElementsByName("official_difficulty")[0];
+            difficulty_input.value = difficulty;   
+        }
+        else{
+            console.log("Already have populated value from LeetCode");
+        }
+        
     }
 });
 
@@ -55,6 +61,8 @@ document.getElementById("leetcode-form").addEventListener("submit", function (ev
     const concept = document.getElementById("concepts").value;
     const personalDifficulty = document.getElementById("personal-difficulty").value;
     const personalNotes = document.getElementById("personal-notes").value;
+
+    document.getElementById("leetcode-form").reset();
 
     console.log(questionTitle, questionDifficulty, concept, personalDifficulty, personalNotes);
 
