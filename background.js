@@ -1,5 +1,27 @@
-var problem_title_stored = null;
-var problem_difficulty_stored = null;
+const storeProblemData = async (title,difficulty) => {
+    try {
+        await chrome.storage.local.set({
+            problemData: {
+                title,
+                difficulty,
+                timeStamp: Date.now()
+            }
+        });
+        console.log("Data succesfully stored:",title,difficulty);
+    } catch(error){
+        console.error("Error storing data:", error);
+    }
+};
+
+const getProblemData = async () => {
+    try{
+        const result = await chrome.storage.local.get("problemData");
+        return result.problemData || null;
+    } catch(error){
+        console.error("Error getting stored data:", error);
+        return null;
+    }
+};
 
 // Handle messages from content script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -9,8 +31,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         
         console.log("data received from content.js:", title, "/", difficulty);
 
-        problem_title_stored = title;
-        problem_difficulty_stored = difficulty;
+        storeProblemData(title,difficulty);
         
         try {
             setTimeout(() => {
@@ -39,18 +60,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 // Handle connection from popup
-chrome.runtime.onConnect.addListener((port) => {
+chrome.runtime.onConnect.addListener(async (port) => {
     if(port.name === "popup.js"){
-        console.log("Popup Connected to Background. Sending stored problem data!:", 
-            problem_title_stored, "/", problem_difficulty_stored);
+        const problemData = await getProblemData();
+        console.log("Popup Connected to Background. Sending stored problem data!:", problemData);
 
-        if(problem_title_stored){
+        if(problemData && problemData.title){
             console.log("Sending data from background to popup now!")
             port.postMessage({
                 action: "problem_data",
                 data: {
-                    title: problem_title_stored, 
-                    difficulty: problem_difficulty_stored
+                    title: problemData.title, 
+                    difficulty: problemData.difficulty
                 }
             });
         }
