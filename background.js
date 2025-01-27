@@ -62,6 +62,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // Handle connection from popup
 chrome.runtime.onConnect.addListener(async (port) => {
     if(port.name === "popup.js"){
+        
         const problemData = await getProblemData();
         console.log("Popup Connected to Background. Sending stored problem data!:", problemData);
 
@@ -77,6 +78,27 @@ chrome.runtime.onConnect.addListener(async (port) => {
         }
     }
 });
+
+chrome.runtime.onConnect.addListener((port) => {
+    if (port.name === "popup.js"){
+        port.onMessage.addListener((message) => {
+            if (message.action === "Clear LC Data"){
+                clearLCData();
+            }
+        });
+    }
+});
+
+function clearLCData(){
+    chrome.storage.local.clear(() => {
+        if(chrome.runtime.lastError) {
+            console.error("Error clearing locally stored LC data:", chrome.runtime.lastError);
+        }
+        else{
+            console.log("LC Data succesfully cleared");
+        }
+    });
+}
 
 // Function to log data to Google Sheets using fetch API
 async function logDataToGoogleSheets(token, data) {
