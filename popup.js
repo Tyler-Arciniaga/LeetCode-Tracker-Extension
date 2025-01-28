@@ -1,6 +1,23 @@
 var title = null;
 var difficulty = null;
 
+const formScreenElement = document.getElementById("form_screen");
+const settingScreenElement = document.getElementById("settings_screen");
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const settingLogoElement = document.querySelector('.setting_logo');
+    settingLogoElement.addEventListener('click', toggleSettingScreen); // Add the click event listener
+  });
+
+function toggleSettingScreen(){
+    console.log(formScreenElement.classList);
+    if (!formScreenElement.classList.contains("hidden")){
+        formScreenElement.classList.add("hidden");
+        settingScreenElement.classList.remove("hidden");
+    }
+}
+
 const port = chrome.runtime.connect({name: "popup.js"});
 
 console.log("Attempting to connect with background.js...");

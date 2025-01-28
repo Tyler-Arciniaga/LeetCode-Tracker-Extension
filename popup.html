@@ -7,24 +7,40 @@
     <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <h1>LeetLogger</h1>
+    <header>
+
+        <img src = "setting-icon-614x460.png" class = "setting_logo"/>
+
+        <h1>LeetLogger</h1>
+
+        <img src="leetcode_logger_cartoon.webp" class="logo" alt="Leetcode Logger Cartoon">
+
+    </header>
+    
 
 
+    <div id = "form_screen">
     <form id = "leetcode-form">
 
+        <div class = "form-item">
         <label for = "official_title">Problem Title</label>
-        <input id = "question-title" name = "official_title" type = "text" value = ""/>
+        <input  id = "question-title" name = "official_title" type = "text" value = ""/>
         <br>
+        </div>
         
+        <div class = "form-item">
         <label for = "official_difficulty">Problem Difficulty</label>
-        <input id = "question-difficulty" name = "official_difficulty" type = "text"/>
+        <input class = "form-item" id = "question-difficulty" name = "official_difficulty" type = "text"/>
         <br>
+        </div>
 
+        <div class = "form-item"> 
         <label for = "concepts">Problem Concept</label>
         <input id = "concepts" name = "concepts" type = "text"/>
-        
+        </div>
         
         <br>
+        <div class = form-item>
         <label for="personal_difficulty">Personal Difficulty</label>
         
         <select id = "personal-difficulty" name = "personal_difficulty" id = "personal_difficulty">
@@ -33,18 +49,29 @@
             <option value = "Medium">Medium</option>
             <option value = "Hard">Hard</option>
         </select>
+        </div>
 
         
         <br>
+        <div class = "form-item">
 
         <label for = "personal_notes">Personal Notes</label>
         <textarea id = "personal-notes" name = "personal_notes"></textarea>
-
+        </div>
         <br>
+        <div class = form-item> 
 
        <button type ="submit">Submit</button>
-
+       <div> 
     </form>
+    </div>
+
+    <div id  = "settings_screen" class = "hidden">
+        <form id = "spreadsheet-form">
+            <label for = "spreadsheet_id">Spreadsheet ID</label>
+            <input id = "spreadsheet_id" name = "spreadsheet_id" type = "text" value = ""/>
+        </form>
+    </div>
 
 
 
