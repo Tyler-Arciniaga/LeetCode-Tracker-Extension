@@ -79,6 +79,21 @@ chrome.runtime.onConnect.addListener(async (port) => {
     }
 });
 
+//Adding new connection for settings window to change spreadsheet ID
+chrome.runtime.onConnect.addListener(async (port) => {
+    if (port.name === "settings.js"){
+        port.onMessage.addListener((message) => {
+            if (message.action === "Change Spreadsheet ID"){
+                changeSpreadsheetID();
+            }
+        });
+    }
+});
+
+function changeSpreadsheetID(){
+    console.log("I Love You!!!!!!!!!");
+}
+
 chrome.runtime.onConnect.addListener((port) => {
     if (port.name === "popup.js"){
         port.onMessage.addListener((message) => {
