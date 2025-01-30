@@ -2,21 +2,41 @@ var title = null;
 var difficulty = null;
 
 const formScreenElement = document.getElementById("form_screen");
+//console.log("form screen class:",formScreenElement.classList);
 const settingScreenElement = document.getElementById("settings_screen");
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const settingLogoElement = document.querySelector('.setting_logo');
-    settingLogoElement.addEventListener('click', toggleSettingScreen); // Add the click event listener
-  });
+document.addEventListener("DOMContentLoaded", function() {
+    const formScreenElement = document.getElementById("form_screen");
+    const settingScreenElement = document.getElementById("settings_screen");
+    const settingImageElement = document.getElementById("setting_logo");
+    const testElement = document.getElementById("1234");
+    
+    console.log("Initial formScreen class list:", formScreenElement.classList);
+    console.log("Initial settingScreen class list:", settingScreenElement.classList);
 
-function toggleSettingScreen(){
-    console.log(formScreenElement.classList);
-    if (!formScreenElement.classList.contains("hidden")){
-        formScreenElement.classList.add("hidden");
-        settingScreenElement.classList.remove("hidden");
+    if(settingImageElement) {
+        settingImageElement.addEventListener('click', function() {
+            if(testElement.classList.contains("hidden")){
+                console.log("in if statement block");
+                testElement.classList.remove("hidden");
+                console.log("(2)settingScreen:", testElement);
+                formScreenElement.classList.add("hidden");
+                console.log("(2)formScreen:", formScreenElement);
+            }
+        });
     }
+});
+
+function handleSettingClick(){
+    console.log("setting image clicked");
+    console.log("(1)formScreen:",formScreenElement);
+    console.log("(1)settingScreen:", settingScreenElement);
+
+    
 }
+
+
 
 const port = chrome.runtime.connect({name: "popup.js"});
 
