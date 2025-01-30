@@ -6,37 +6,9 @@ const formScreenElement = document.getElementById("form_screen");
 const settingScreenElement = document.getElementById("settings_screen");
 
 
-document.addEventListener("DOMContentLoaded", function() {
-    const formScreenElement = document.getElementById("form_screen");
-    const settingScreenElement = document.getElementById("settings_screen");
-    const settingImageElement = document.getElementById("setting_logo");
-    const testElement = document.getElementById("1234");
-    
-    console.log("Initial formScreen class list:", formScreenElement.classList);
-    console.log("Initial settingScreen class list:", settingScreenElement.classList);
-
-    if(settingImageElement) {
-        settingImageElement.addEventListener('click', function() {
-            if(testElement.classList.contains("hidden")){
-                console.log("in if statement block");
-                testElement.classList.remove("hidden");
-                console.log("(2)settingScreen:", testElement);
-                formScreenElement.classList.add("hidden");
-                console.log("(2)formScreen:", formScreenElement);
-            }
-        });
-    }
-});
-
-function handleSettingClick(){
-    console.log("setting image clicked");
-    console.log("(1)formScreen:",formScreenElement);
-    console.log("(1)settingScreen:", settingScreenElement);
-
-    
+document.getElementById('go-to-settingScreen').onclick = (e) => {
+    window.location.href = "./settings.html";
 }
-
-
 
 const port = chrome.runtime.connect({name: "popup.js"});
 
