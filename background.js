@@ -1,4 +1,3 @@
-let spreadsheetID = null
 const storeProblemData = async (title,difficulty) => {
     try {
         await chrome.storage.local.set({
@@ -94,7 +93,9 @@ chrome.runtime.onConnect.addListener(async (port) => {
 
 function changeSpreadsheetID(newID){
     console.log("changing spreadsheet ID...");
-    console.log(newID);
+    chrome.storage.local.set({spreadsheetID: newID}, function (){
+        console.log("ID set to:",newID);
+    });
 }
 
 chrome.runtime.onConnect.addListener((port) => {
