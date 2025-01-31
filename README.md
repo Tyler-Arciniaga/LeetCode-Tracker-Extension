@@ -31,9 +31,15 @@ A Chrome extension that helps you log LeetCode questions and track your progress
 3. **Settings Page**: The settings page allows users to change:
    - The Google Spreadsheet ID where data is logged.
    - Appearance settings for the popup window.
+  
+## Video Demonstration:
+![LeetLogger-demo](https://github.com/user-attachments/assets/b9001622-28c5-478b-872f-36cbd050e699)
 
-## Installation
+
+## Try It For Yourself
 
 1. Clone this repository to your local machine:
    ```bash
    git clone https://github.com/yourusername/leetcode-tracker-extension.git
+2. Be sure to enter the Google Sheets spreadsheet ID exactly as shown in the video demonstration to link it with the extension for sending LeetCode problem data.
+3. Enjoy!
