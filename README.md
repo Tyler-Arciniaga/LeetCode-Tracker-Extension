@@ -1,6 +1,6 @@
 # LeetCode Tracker Chrome Extension
 
-A Chrome extension that helps you log LeetCode questions and track your progress directly in Google Sheets. With user authentication, the extension connects to your Google account, allowing you to securely store your data and interact with a custom Google Sheet for logging your LeetCode questions.
+A Chrome extension that helps you log LeetCode questions and track your progress directly in Google Sheets. The extension automatically populates a form with details from the LeetCode page, allowing you to fill in personal notes and progress before submitting it to securely store your data in a custom Google Sheet. With user authentication, it connects to your Google account, ensuring your information is safely stored and easily accessible.
 
 ## Features
 
