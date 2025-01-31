@@ -1,3 +1,4 @@
+
 const storeProblemData = async (title,difficulty) => {
     try {
         await chrome.storage.local.set({
@@ -94,7 +95,7 @@ chrome.runtime.onConnect.addListener(async (port) => {
 function changeSpreadsheetID(newID){
     console.log("changing spreadsheet ID...");
     chrome.storage.local.set({spreadsheetID: newID}, function (){
-        console.log("ID set to:",newID);
+        console.log("ID set to:", newID);
     });
 }
 
@@ -108,8 +109,8 @@ chrome.runtime.onConnect.addListener((port) => {
     }
 });
 
-function clearLCData(){
-    chrome.storage.local.clear(() => {
+function clearLCData() {
+    chrome.storage.local.remove(["problemData"], function() {
         if(chrome.runtime.lastError) {
             console.error("Error clearing locally stored LC data:", chrome.runtime.lastError);
         }
@@ -121,10 +122,13 @@ function clearLCData(){
 
 // Function to log data to Google Sheets using fetch API
 async function logDataToGoogleSheets(token, data) {
-    const sheetId = "1PemLQl7vTGnCdMHTjLlrJJ3XwgHI3iSRhRqKtCGP1Ak"; // Replace with your actual Google Sheets ID
+    let result = await chrome.storage.local.get(["spreadsheetID"]);
+    let currentSpreadsheetID = result.spreadsheetID;
+    console.log("Retrieved current spreadsheetID:",currentSpreadsheetID);
+    
     const range = "Sheet1!A1"; // Replace with your desired range
     
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}:append?valueInputOption=RAW`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${currentSpreadsheetID}/values/${range}:append?valueInputOption=RAW`;
     
     const requestBody = {
         values: [
